@@ -4,7 +4,7 @@ import { Fragment } from 'react/cjs/react.production.min';
 
 const Backdrop = props => {
     return (
-        <div className={styles.backdrop} />
+        <div className={styles.backdrop} onClick={props.onClose} />
     );
 };
 
@@ -21,7 +21,7 @@ const portalElement = document.getElementById('overlays');
 const Modal = props => {
     return (
         <Fragment>
-            {ReactDOM.createPortal(<Backdrop />, portalElement)}
+            {ReactDOM.createPortal(<Backdrop onClose={props.onClose} />, portalElement)}
             {ReactDOM.createPortal(<ModalOverlay>{props.children}</ModalOverlay>,
                 portalElement
             )}
