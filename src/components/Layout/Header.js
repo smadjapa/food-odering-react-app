@@ -3,6 +3,11 @@ import mealsImage from '../../assets/meals.jpeg';
 import styles from './Header.module.css';
 import HeaderCartButton from "./HeaderCartButton";
 
+/**
+ * Header Component
+ * @param {Object} props Contains onShowCart handler
+ * @returns {JSX} Header JSX
+ */
 const Header = props => {
     return(
         <React.Fragment>
@@ -17,4 +22,5 @@ const Header = props => {
     );
 };
 
+//export the component
 export default Header;
