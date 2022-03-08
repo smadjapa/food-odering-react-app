@@ -1,8 +1,9 @@
 import Modal from '../UI/Modal';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import styles from './Cart.module.css';
 import CartItem from './CartItem';
 import CartContext from '../../store/cart-context';
+import Checkout from './Checkout';
 
 const Cart = props => {
 
@@ -12,6 +13,7 @@ const Cart = props => {
      * totalAmount variable (And change it to 2 dec places)
      * variable to check if there are items in the cart
      */
+    const [isCheckout, setIsCheckout] = useState(false);
     const cartCtx = useContext(CartContext);
     const totalAmount = `$${cartCtx.totalAmount.toFixed(2)}`;
     const hasItems = cartCtx.items.length > 0;
@@ -20,7 +22,7 @@ const Cart = props => {
      * Handles the action of removing the item from the cart
      * @param {String} id 
      */
-    const cartItemRemoveHandler = id => { 
+    const cartItemRemoveHandler = id => {
         cartCtx.removeItem(id);
     };
 
@@ -28,15 +30,19 @@ const Cart = props => {
      * Handels the action of adding the item to the cart
      * @param {CartContext} item 
      */
-    const cartItemAddHandler = item => { 
+    const cartItemAddHandler = item => {
         cartCtx.addItem({
             ...item, amount: 1
         });
-     };
+    };
 
-     /**
-      * CartItem component
-      */
+    const orderHandler = () => {
+        setIsCheckout(true);
+    };
+
+    /**
+     * CartItem component
+     */
     const cartItems = <ul className={styles['cart-items']}>
         {cartCtx.items.map(
             item => <CartItem
@@ -45,6 +51,11 @@ const Cart = props => {
                 onRemove={cartItemRemoveHandler.bind(null, item.id)}
                 onAdd={cartItemAddHandler.bind(null, item)} />
         )}</ul>;
+
+    const modalActions = <div className={styles.actions}>
+        <button className={styles['button--alt']} onClick={props.onCloseCart}>Close</button>
+        {hasItems && <button className={styles.button} onClick={orderHandler}>Order</button>}
+    </div>
 
     /**
      * Cart JSX component with the modal component
@@ -56,10 +67,8 @@ const Cart = props => {
                 <span>Total Amount</span>
                 <span>{totalAmount}</span>
             </div>
-            <div className={styles.actions}>
-                <button className={styles['button--alt']} onClick={props.onCloseCart}>Close</button>
-                {hasItems && <button className={styles.button}>Order</button>}
-            </div>
+            {isCheckout && <Checkout onCancel={props.onCloseCart} />}
+            {!isCheckout && modalActions}
         </Modal>
     );
 };
